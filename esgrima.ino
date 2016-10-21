@@ -39,7 +39,7 @@ char Teclas [ Fils ][ Cols ] =
         {'*','7','4','1'}
      };
 
- Keypad Teclado1 = Keypad(makeKeymap(Teclas), Pins_Filas, Pins_Cols, Fils, Cols);
+Keypad Teclado1 = Keypad(makeKeymap(Teclas), Pins_Filas, Pins_Cols, Fils, Cols);
 
 int encender = 0;                 // Si está encendido el LED
 int anterior = 0;                 // Pulsación anterior
@@ -109,14 +109,14 @@ void setup()
 void loop()
 {
  
-    pulsacion = Teclado1.getKey() ;  //Esperamos pulsacion en el teclado
+    pulsacion = Teclado1.getKey() ;  //Esta función devuleve un char y no es bloqueante (en cada loop comprueba pulsación) http://playground.arduino.cc/Code/Keypad#Functions
     if (pulsacion != NO_KEY)
     {
       option = pulsacion - 48;   ////le restamos 48 que es el '0' en ASCII para que me de un entero en vez de un caracter
       Serial.println(option);
     }
-    leds = 0;
-    tleds = 0;
+    leds = 0;	//en cada loop inicalizo esta variable numero de leds
+    tleds = 0;	//Tiempo leds
     if (option >= 1 && option <= 3)
     {
       switch (option) 
@@ -134,7 +134,7 @@ void loop()
           lcd.setCursor(9,1);
           do
           {
-            pulsacion = Teclado1.getKey(); //Esperamos la primera pulsacion en el teclado
+            pulsacion = Teclado1.getKey(); //Esta función no bloquea, si queremos esperar usar waitForKey()o bucle como este
           }while (pulsacion == NO_KEY || (pulsacion != '0' && pulsacion != '1')); //Eperaremos pulsacion hasta que se pulse un 0 o un 1
 
           option = pulsacion - 48;
@@ -146,6 +146,8 @@ void loop()
           {
             pulsacion2 = Teclado1.getKey(); //Esperamos la segunda pulsación en el teclado que tiene que ser 0,1,2,3,4 o 5
           }while (pulsacion2 == NO_KEY || (pulsacion2 != '0' && pulsacion2 != '1' && pulsacion2 != '2' && pulsacion2 != '3' && pulsacion2 != '4' && pulsacion2 != '5'));
+		  
+		  //seria mejor opcion leer la tecla pulsada y si no es la esperada sacar por LCD  "tecla incorrecta"
 
           option2 = pulsacion2 - 48; //le restamos 48 que es el '0' en ASCII para que me de un entero en vez de un caracter
           lcd.print(option2);
@@ -241,7 +243,7 @@ void loop()
           //LLAMADA A LA FUNCION ENTRENAMIENTO1
           entrenamiento1(leds, tleds, taleds);
           break;
-        
+---------------        
         case 2:
           lcd.clear();
           lcd.print ("Juego 2");
